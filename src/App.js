@@ -1,24 +1,28 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import InputShortener from "./InputShortener";
+import LinkResult from "./LinkResult";
 
+/**
+ * Main application component for the URL Shortener.
+ * It handles the main state and passes the input URL to child components.
+ *
+ * @component
+ */
 function App() {
+  /**
+   * The URL entered by the user.
+   * @type {[string, Function]}
+   */
+  const [inputValue, setInputValue] = useState("");
+
   return (
-    <div className="App">
-      
-      <header className="App-header">
-      <img src={logo} className="App-logo" alt="logo" />
-      <p>
-      Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-      className="App-link"
-      href="https://reactjs.org"
-      target="_blank"
-      rel="noopener noreferrer"
-      >
-      Learn React
-      </a>
-      </header>
+    <div className="container">
+      {/* Input field where user enters URL */}
+      <InputShortener setInputValue={setInputValue} />
+
+      {/* Display shortened result */}
+      <LinkResult inputValue={inputValue} />
     </div>
   );
 }
