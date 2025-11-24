@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import InputShortener from "./InputShortener";
 import LinkResult from "./LinkResult";
+import styled from "@emotion/styled";
+import BackgroundAnimate from "./BackgroundAnimate";
+
 
 /**
  * Main application component for the URL Shortener.
@@ -26,7 +29,7 @@ function App() {
   return (
     <div className="container">
       <InputShortener setInputValue={setInputValue} />
-
+      <BackgroundAnimate />
       <LinkResult
         inputValue={inputValue}
         history={history}

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
+import styled from "@emotion/styled";
+
+
 
 /**
  * LinkResult fetches, displays and stores shortened URLs.
