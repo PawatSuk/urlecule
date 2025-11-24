@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
-import styled from "@emotion/styled";
+
 
 
 
@@ -65,31 +64,31 @@ const LinkResult = ({ inputValue, history, setHistory }) => {
   }, [inputValue]);
 
   // Handle copied button effect
-  useEffect(() => {
-    if (!copied) return;
-    const timer = setTimeout(() => setCopied(false), 1000);
-    return () => clearTimeout(timer);
-  }, [copied]);
+//   useEffect(() => {
+//     if (!copied) return;
+//     const timer = setTimeout(() => setCopied(false), 1000);
+//     return () => clearTimeout(timer);
+//   }, [copied]);
 
-  return (
-    <div className="result">
-      {loading && <p>Loading...</p>}
-      {shortenLink && (
-        <>
-          <p>{shortenLink}</p>
+//   return (
+//     <div className="result">
+//       {loading && <p>Loading...</p>}
+//       {shortenLink && (
+//         <>
+//           <p>{shortenLink}</p>
 
-          <CopyToClipboard
-            text={shortenLink}
-            onCopy={() => setCopied(true)}
-          >
-            <button className={copied ? "copied" : ""}>
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </CopyToClipboard>
-        </>
-      )}
-    </div>
-  );
+//           <CopyToClipboard
+//             text={shortenLink}
+//             onCopy={() => setCopied(true)}
+//           >
+//             <button className={copied ? "copied" : ""}>
+//               {copied ? "Copied!" : "Copy"}
+//             </button>
+//           </CopyToClipboard>
+//         </>
+//       )}
+//     </div>
+//   );
 };
 
 export default LinkResult;
