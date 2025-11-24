@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
-
 
 
 
@@ -71,25 +69,25 @@ const LinkResult = ({ inputValue, history, setHistory }) => {
     return () => clearTimeout(timer);
   }, [copied]);
 
-  return (
-    <div className="result">
-      {loading && <p>Loading...</p>}
-      {shortenLink && (
-        <>
-          <p>{shortenLink}</p>
+//   return (
+//     <div className="result">
+//       {loading && <p>Loading...</p>}
+//       {shortenLink && (
+//         <>
+//           <p>{shortenLink}</p>
 
-          <CopyToClipboard
-            text={shortenLink}
-            onCopy={() => setCopied(true)}
-          >
-            <button className={copied ? "copied" : ""}>
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </CopyToClipboard>
-        </>
-      )}
-    </div>
-  );
+//           <CopyToClipboard
+//             text={shortenLink}
+//             onCopy={() => setCopied(true)}
+//           >
+//             <button className={copied ? "copied" : ""}>
+//               {copied ? "Copied!" : "Copy"}
+//             </button>
+//           </CopyToClipboard>
+//         </>
+//       )}
+//     </div>
+//   );
 };
 
 export default LinkResult;
