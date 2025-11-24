@@ -2,44 +2,22 @@ import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 
 /**
- * Component that fetches and displays the shortened URL.
+ * LinkResult fetches, displays and stores shortened URLs.
  *
- * @component
- * @param {Object} props
- * @param {string} props.inputValue - The original URL to shorten
+ * @param {string} inputValue - URL to shorten
+ * @param {Array} history - List of past shortened URLs
+ * @param {Function} setHistory - Updates history in App.js
  */
-const LinkResult = ({ inputValue }) => {
-  /**
-   * Shortened URL returned from the API.
-   * @type {[string, Function]}
-   */
+const LinkResult = ({ inputValue, history, setHistory }) => {
   const [shortenLink, setShortenLink] = useState("");
-
-  /**
-   * Whether the text has been copied to clipboard.
-   * @type {[boolean, Function]}
-   */
   const [copied, setCopied] = useState(false);
-
-  /**
-   * Whether the API is loading.
-   * @type {[boolean, Function]}
-   */
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Stores error messages from API fetch.
-   * @type {[string, Function]}
-   */
-  const [error, setError] = useState("");
+  // Load cache from localStorage (or empty object)
+  const cache = JSON.parse(localStorage.getItem("cache")) || {};
 
   /**
-   * Fetches a shortened URL from TinyURL API.
-   *
-   * @async
-   * @function
-   * @param {string} longUrl - The URL to shorten
-   * @returns {Promise<string>} The shortened URL
+   * Call TinyURL API
    */
   const shortenUrl = async (longUrl) => {
     const res = await fetch(
@@ -48,26 +26,33 @@ const LinkResult = ({ inputValue }) => {
     return await res.text();
   };
 
-  // Fetch API whenever inputValue changes
   useEffect(() => {
     if (!inputValue) return;
+
+    // 1️⃣ Check if URL exists in cache
+    if (cache[inputValue]) {
+      setShortenLink(cache[inputValue]);
+      return;
+    }
 
     const fetchData = async () => {
       try {
         setLoading(true);
-        setError("");
 
+        // 2️⃣ Call API
         const shortUrl = await shortenUrl(inputValue);
 
-        if (!shortUrl.startsWith("http")) {
-          setError("Invalid URL or TinyURL error");
-          setShortenLink("");
-          return;
-        }
+        // 3️⃣ Save to cache
+        cache[inputValue] = shortUrl;
+        localStorage.setItem("cache", JSON.stringify(cache));
 
+        // 4️⃣ Save to history
+        const newRecord = { long: inputValue, short: shortUrl };
+        const updatedHistory = [newRecord, ...history]; // newest first
+        setHistory(updatedHistory);
+
+        // 5️⃣ Show to user
         setShortenLink(shortUrl);
-      } catch (err) {
-        setError("Failed to shorten URL");
       } finally {
         setLoading(false);
       }
@@ -76,7 +61,7 @@ const LinkResult = ({ inputValue }) => {
     fetchData();
   }, [inputValue]);
 
-  // Reset "Copied" message after 1 second
+  // Handle copied button effect
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 1000);
@@ -86,13 +71,14 @@ const LinkResult = ({ inputValue }) => {
   return (
     <div className="result">
       {loading && <p>Loading...</p>}
-      {error && <p className="error">{error}</p>}
-
-      {shortenLink && !loading && (
+      {shortenLink && (
         <>
           <p>{shortenLink}</p>
 
-          <CopyToClipboard text={shortenLink} onCopy={() => setCopied(true)}>
+          <CopyToClipboard
+            text={shortenLink}
+            onCopy={() => setCopied(true)}
+          >
             <button className={copied ? "copied" : ""}>
               {copied ? "Copied!" : "Copy"}
             </button>

@@ -1,28 +1,47 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import InputShortener from "./InputShortener";
 import LinkResult from "./LinkResult";
 
 /**
  * Main application component for the URL Shortener.
- * It handles the main state and passes the input URL to child components.
  *
- * @component
+ * Handles the main state, link input, and link history.
  */
 function App() {
-  /**
-   * The URL entered by the user.
-   * @type {[string, Function]}
-   */
   const [inputValue, setInputValue] = useState("");
+  const [history, setHistory] = useState([]);
+
+  // Load history from localStorage on startup
+  useEffect(() => {
+    const savedHistory = JSON.parse(localStorage.getItem("history")) || [];
+    setHistory(savedHistory);
+  }, []);
+
+  // Save history to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("history", JSON.stringify(history));
+  }, [history]);
 
   return (
     <div className="container">
-      {/* Input field where user enters URL */}
       <InputShortener setInputValue={setInputValue} />
 
-      {/* Display shortened result */}
-      <LinkResult inputValue={inputValue} />
+      <LinkResult
+        inputValue={inputValue}
+        history={history}
+        setHistory={setHistory}
+      />
+
+      {/* SHOW HISTORY HERE */}
+      <div className="history">
+        <h3>Link History</h3>
+        {history.map((item, i) => (
+          <p key={i}>
+            {item.long} → <a href={item.short}>{item.short}</a>
+          </p>
+        ))}
+      </div>
     </div>
   );
 }
