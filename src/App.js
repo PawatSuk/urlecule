@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import InputShortener from "./InputShortener";
 import LinkResult from "./LinkResult";
-import styled from "@emotion/styled";
 import BackgroundAnimate from "./BackgroundAnimate";
 
 
